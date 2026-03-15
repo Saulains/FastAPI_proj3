@@ -57,8 +57,8 @@ curl -X POST "http://localhost:8000/links/shorten" \
 ```json
 {
   "status": "success",
-  "short_code": "abc12xy",
-  "original_url": "https://example.com/page"
+  "short_code": "th1jxwe",
+  "original_url": "https://example.com/"
 }
 ```
 
@@ -73,7 +73,7 @@ curl "http://localhost:8000/links/top"
 ### Переход по короткой ссылке
 
 ```bash
-curl -L "http://localhost:8000/abc12xy"
+curl -L "http://localhost:8000/x65rew1"
 ```
 
 Происходит редирект на исходный URL, увеличивается счетчик переходов и обновляется last_used_at
@@ -81,7 +81,7 @@ curl -L "http://localhost:8000/abc12xy"
 ### Статистика по ссылке
 
 ```bash
-curl "http://localhost:8000/links/abc12xy/stats"
+curl "http://localhost:8000/links/x65rew1/stats"
 ```
 
 Пример ответа:
@@ -106,11 +106,11 @@ curl "http://localhost:8000/links/search?original_url=https://example.com/page"
 
 ```bash
 # Удалить ссылку
-curl -X DELETE "http://localhost:8000/links/abc12xy" \
+curl -X DELETE "http://localhost:8000/links/x65rew1" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 
 # Обновить короткую ссылку (новая определяется случайным образом)
-curl -X PUT "http://localhost:8000/links/abc12xy" \
+curl -X PUT "http://localhost:8000/links/9v1exo6" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
@@ -118,8 +118,8 @@ curl -X PUT "http://localhost:8000/links/abc12xy" \
 ```json
 {
   "status": "success",
-  "old_short_code": "abc12xy",
-  "new_short_code": "xyz98ab"
+  "old_short_code": "9v1exo6",
+  "new_short_code": "x65rew1"
 }
 ```
 
