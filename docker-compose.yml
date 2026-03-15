@@ -1,0 +1,88 @@
+version: "3.7"
+services:
+  db:
+    image: postgres:16
+    container_name: db_app
+    command: -p 1221
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    expose:
+      - 1221
+    ports:
+      - "5433:1221"
+
+  redis:
+    image: redis:7
+    container_name: redis_app
+    command: --port 5370
+    expose:
+      - 5370
+
+  app:
+    build:
+      context: .
+    container_name: fastapi_app
+    command: ["/fastapi_app/docker/app.sh"]
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:5370/0
+      DB_HOST: db
+      DB_PORT: "1221"
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_NAME: postgres
+    ports:
+      - 9999:8000
+    depends_on:
+      - db
+      - redis
+
+  celery:
+    build:
+      context: .
+    container_name: celery_app
+    command: ["/fastapi_app/docker/celery.sh", "celery"]
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:5370/0
+      DB_HOST: db
+      DB_PORT: "1221"
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_NAME: postgres
+      UNUSED_LINKS_DAYS: "10"
+    depends_on:
+      - redis
+      - db
+
+  celery_beat:
+    build:
+      context: .
+    container_name: celery_beat_app
+    command: ["/fastapi_app/docker/celery.sh", "beat"]
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:5370/0
+    depends_on:
+      - redis
+
+  flower:
+    build:
+      context: .
+    container_name: flower_app
+    command: ["/fastapi_app/docker/celery.sh", "flower"]
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:5370/0
+      CELERY_BROKER_URL: redis://redis:5370/0
+    depends_on:
+      - redis
+      - celery
+    ports:
+      - 8888:5555
