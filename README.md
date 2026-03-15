@@ -174,6 +174,7 @@ PYTHONPATH=.:src uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 После этого API будет доступен по адресу http://localhost:8000
+
 ---
 
 ## Описание БД
