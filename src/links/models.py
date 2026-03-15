@@ -5,7 +5,7 @@ from auth.db import Base
 links = Table(
     "links",
     Base.metadata,
-    Column("id", Integer, primary_key=True),
+    Column("id", Integer, primary_key=True, autoincrement=True),
     Column("original_url", String, nullable=False),
     Column("short_code", String, nullable=False, unique=True), # Не link, тк без домена
     Column("created_at", DateTime, nullable=False),

@@ -2,7 +2,8 @@ import os
 
 from dotenv import load_dotenv
 
-load_dotenv()
+_project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(_project_root, ".env"))
 
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")

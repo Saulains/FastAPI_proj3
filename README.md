@@ -99,7 +99,7 @@ curl "http://localhost:8000/links/abc12xy/stats"
 ### Поиск по оригинальному URL
 
 ```bash
-curl "http://localho8000/links/search?original_url=https://example.com/page"
+curl "http://localhost:8000/links/search?original_url=https://example.com/page"
 ```
 
 ### Удаление и обновление
@@ -143,8 +143,8 @@ DB_HOST=localhost DB_PORT=5433 python -m alembic upgrade head
 ```
 
 4. Доступ:
-   - API: http://localhost:9999  
-   - Swagger: http://localhost:9999/docs  
+   - API: http://localhost:8000  
+   - Swagger: http://localhost:8000/docs  
    - Flower: http://localhost:8888  
 
 ### Локально

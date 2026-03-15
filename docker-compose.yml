@@ -35,7 +35,7 @@ services:
       DB_PASS: postgres
       DB_NAME: postgres
     ports:
-      - 9999:8000
+      - 8000:8000
     depends_on:
       - db
       - redis
