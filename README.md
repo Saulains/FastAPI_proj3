@@ -194,3 +194,64 @@ PYTHONPATH=.:src uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 - `num_of_clicks` — число переходов
 
 Фоновые задачи (Celery) удаляют записи с истекшим `expires_at` и записи, у которых `last_used_at` старше заданного числа дней (`UNUSED_LINKS_DAYS`, по умолчанию 10).
+
+---
+
+## Тестирование
+
+Тесты находятся в папке `tests/`:
+
+- `test_unit_links.py` — юнит-тесты для отдельных функций
+- `test_links_api.py` — функциональные тесты API через `TestClient`
+
+В тестах используется заглушка для базы данных, которая описана в `conftest.py`, поэтому для запуска `pytest` не требуется отдельно поднимать PostgreSQL.
+
+### Запуск тестов
+
+```bash
+pip install -r requirements.txt
+pip install -r requirements-tests.txt
+pytest tests
+```
+
+Покрытие:
+
+```bash
+python3 -m coverage run -m pytest tests
+python3 -m coverage report -m
+python3 -m coverage html
+```
+
+Отчёт откроется файлом `htmlcov/index.html` в браузере.
+
+Отчет в момент последнего запуска:
+Name                       Stmts   Miss  Cover   Missing
+--------------------------------------------------------
+src/auth/db.py                12      1    92%   20
+src/auth/schemas.py            7      0   100%
+src/auth/users.py             22      3    86%   21, 26, 33
+src/config.py                 14      0   100%
+src/database.py                9      2    78%   12-13
+src/links/models.py            5      0   100%
+src/links/router.py          141     14    90%   50-51, 63, 98, 148, 170, 172, 208, 224-231
+src/links/schemas.py          12      0   100%
+src/main.py                   23      3    87%   17-20
+tests/conftest.py             63      2    97%   14, 81
+tests/test_links_api.py       69      0   100%
+tests/test_unit_links.py      54      1    98%   12
+--------------------------------------------------------
+TOTAL                        431     26    94%
+
+### Locust (нагрузка)
+
+Файл: `tests/locustfile.py`. Сначала поднимаем API (**http://localhost:8000**), затем из корня проекта:
+
+```bash
+python3 -m locust -f tests/locustfile.py --host http://localhost:8000
+```
+
+В браузере: `http://localhost:8089`, задаем число пользователей и нажимаем Start.
+
+В нагрузочном тестировании проверяются:
+- массовое создание коротких ссылок через POST /links/shorten
+- получение статистики для короткой ссылки через GET /links/{short_code}/stats

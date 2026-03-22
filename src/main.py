@@ -6,15 +6,20 @@ from auth.schemas import UserCreate, UserRead
 from links.router import router as links_router
 from redis import asyncio as aioredis
 from fastapi_cache import FastAPICache
-from fastapi_cache.backends.redis import RedisBackend
+from fastapi_cache.backends.inmemory import InMemoryBackend
 
-from config import REDIS_URL
+from config import REDIS_URL, USE_REDIS_CACHE
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-    redis = aioredis.from_url(REDIS_URL)
-    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
+    if USE_REDIS_CACHE:
+        from fastapi_cache.backends.redis import RedisBackend
+
+        redis = aioredis.from_url(REDIS_URL)
+        FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
+    else:
+        FastAPICache.init(InMemoryBackend(), prefix="fastapi-cache")
     # await create_db_and_tables()
     yield
 

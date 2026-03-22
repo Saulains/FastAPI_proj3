@@ -13,6 +13,9 @@ DB_NAME = os.getenv("DB_NAME")
 
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
+_USE_REDIS_RAW = os.getenv("USE_REDIS_CACHE", "true").strip().lower()
+USE_REDIS_CACHE = _USE_REDIS_RAW in ("1", "true", "yes", "on")
+
 # Дней после last_used_at, после которых ссылка удаляется
 UNUSED_LINKS_DAYS = int(os.getenv("UNUSED_LINKS_DAYS", "10"))
 
