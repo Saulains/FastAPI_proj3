@@ -203,6 +203,8 @@ PYTHONPATH=.:src uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 
 - `test_unit_links.py` — юнит-тесты для отдельных функций
 - `test_links_api.py` — функциональные тесты API через `TestClient`
+- `conftest.py` — общие фикстуры pytest
+- `locustfile.py` — сценарий нагрузочного тестирования (Locust)
 
 В тестах используется заглушка для базы данных, которая описана в `conftest.py`, поэтому для запуска `pytest` не требуется отдельно поднимать PostgreSQL.
 
@@ -222,9 +224,10 @@ python3 -m coverage report -m
 python3 -m coverage html
 ```
 
-Отчёт откроется файлом `htmlcov/index.html` в браузере.
+Отчет откроется файлом `htmlcov/index.html` в браузере.
 
 Отчет в момент последнего запуска:
+```text
 Name                       Stmts   Miss  Cover   Missing
 --------------------------------------------------------
 src/auth/db.py                12      1    92%   20
@@ -241,6 +244,7 @@ tests/test_links_api.py       69      0   100%
 tests/test_unit_links.py      54      1    98%   12
 --------------------------------------------------------
 TOTAL                        431     26    94%
+```
 
 ### Locust (нагрузка)
 
